@@ -7,6 +7,7 @@ import helmet from '@fastify/helmet'
 import 'dotenv/config'
 import { uptime } from 'node:process'
 import { timeStamp } from 'node:console'
+import productRoutes from './routes/products.routes'
 
 const PORT = parseInt(process.env.PORT ?? '3000')
 
@@ -21,6 +22,8 @@ fastify.register(cors, {
 fastify.register(helmet, {
     contentSecurityPolicy: false
 })
+
+fastify.register(productRoutes, { prefix: '/products' })
 
 // Declare a route
 fastify.get('/', async (request, reply) => {

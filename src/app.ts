@@ -1,17 +1,19 @@
 // Require the framework and instantiate it
 
 // ESM
-import Fastify from "fastify";
+import Fastify, { FastifyError } from "fastify";
 import cors from "@fastify/cors";
 import helmet from "@fastify/helmet";
 import "dotenv/config";
 import { uptime } from "node:process";
-import { timeStamp } from "node:console";
+import { error, timeStamp } from "node:console";
 import productRoutes from "./routes/products.routes";
 import swagger from "@fastify/swagger";
 import scalar from "@scalar/fastify-api-reference";
 import jwt from "@fastify/jwt";
 import authRoutes from "./routes/auth.routes";
+import z, { ZodError } from "zod";
+import { errorHandler } from "./middlewares/error.middleware";
 
 const PORT = parseInt(process.env.PORT ?? "3000");
 
@@ -83,6 +85,8 @@ fastify.get("/health", async (request, reply) => {
     timeStamp: new Date().toISOString(),
   };
 });
+
+fastify.setErrorHandler(errorHandler);
 
 // Run the server!
 fastify.listen({ port: PORT }, function (err, address) {
